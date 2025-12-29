@@ -113,7 +113,7 @@ router.get('/:shortId', async function(req, res) {
             ip: ip,
             userAgent: userAgent,
             referer: referer,
-            device: device,
+            deviceType: device,
             browser: browser,
             os: os,
             earned: earned

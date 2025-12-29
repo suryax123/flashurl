@@ -11,7 +11,7 @@ const clickSchema = new mongoose.Schema({
     ip: String,
     userAgent: String,
     referer: String,
-    device: {
+    deviceType: {
         type: String,
         enum: ['desktop', 'mobile', 'tablet', 'unknown'],
         default: 'unknown'
