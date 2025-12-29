@@ -421,7 +421,7 @@ footer {
 
 /* Hidden class */
 .hidden {
-    display:  none ! important;
+    display: none !important;
 }
 
 /* ========== RESPONSIVE ========== */
@@ -468,4 +468,11 @@ footer {
     font-size: 1.2rem;
     font-weight: 600;
     margin-bottom: 20px;
+}
+
+/* Error Text */
+.error-text {
+    color: #d63031;
+    font-size: 0.9rem;
+    margin-top: 10px;
 }

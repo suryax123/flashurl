@@ -63,12 +63,12 @@
     <script>
         let timeLeft = 8;
         const timerEl = document.getElementById('timer');
-        const progressEl = document. getElementById('progress');
+        const progressEl = document.getElementById('progress');
         const continueBtn = document.getElementById('continueBtn');
 
         const countdown = setInterval(() => {
             timeLeft--;
-            timerEl. textContent = timeLeft;
+            timerEl.textContent = timeLeft;
             progressEl.style.width = ((8 - timeLeft) / 8 * 100) + '%';
 
             if (timeLeft <= 0) {

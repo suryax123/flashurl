@@ -1,9 +1,9 @@
-<! DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Final Step - Get Your Link!  - FlashURL</title>
+    <title>Final Step - Get Your Link! - FlashURL</title>
     <link rel="stylesheet" href="/css/style.css">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
@@ -40,7 +40,7 @@
                 </div>
 
                 <div id="captchaSection" class="captcha-section hidden">
-                    <p>Verify you're human to get your link: </p>
+                    <p>Verify you're human to get your link:</p>
                     <div class="recaptcha-container">
                         <div class="g-recaptcha" 
                              data-sitekey="<%= siteKey %>" 
@@ -48,12 +48,13 @@
                              data-size="normal">
                         </div>
                     </div>
-                    <p class="captcha-note">Just click the checkbox!  ✅</p>
+                    <p class="captcha-note">Just click the checkbox! ✅</p>
+                    <p id="captchaError" class="error-text hidden"></p>
                 </div>
 
                 <div id="getLinkSection" class="get-link-section hidden">
                     <p class="success-text">✅ Verified! Click below to continue</p>
-                    <a href="<%= originalUrl %>" id="getLinkBtn" class="btn btn-success">
+                    <a href="#" id="getLinkBtn" class="btn btn-success">
                         🔗 GET LINK
                     </a>
                 </div>
@@ -79,10 +80,14 @@
     <script>
         var timeLeft = 5;
         var timerEl = document.getElementById('timer');
-        var progressEl = document. getElementById('progress');
+        var progressEl = document.getElementById('progress');
         var countdownSection = document.getElementById('countdownSection');
         var captchaSection = document.getElementById('captchaSection');
-        var getLinkSection = document. getElementById('getLinkSection');
+        var getLinkSection = document.getElementById('getLinkSection');
+        var captchaError = document.getElementById('captchaError');
+        var getLinkBtn = document.getElementById('getLinkBtn');
+        var shortId = '<%= shortId %>';
+        var verifiedUrl = null;
 
         var countdown = setInterval(function() {
             timeLeft = timeLeft - 1;
@@ -98,10 +103,42 @@
         }, 1000);
 
         function onCaptchaSuccess(token) {
-            captchaSection.style.display = 'none';
-            getLinkSection.style. display = 'block';
-            getLinkSection.classList.remove('hidden');
+            // Verify CAPTCHA on server
+            fetch('/verify/' + shortId, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ captchaToken: token })
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                if (data.success) {
+                    verifiedUrl = data.redirectUrl;
+                    captchaSection.style.display = 'none';
+                    getLinkSection.style.display = 'block';
+                    getLinkSection.classList.remove('hidden');
+                } else {
+                    captchaError.textContent = data.error || 'Verification failed. Please try again.';
+                    captchaError.classList.remove('hidden');
+                    grecaptcha.reset();
+                }
+            })
+            .catch(function(error) {
+                captchaError.textContent = 'Network error. Please try again.';
+                captchaError.classList.remove('hidden');
+                grecaptcha.reset();
+            });
         }
+
+        getLinkBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (verifiedUrl) {
+                window.location.href = verifiedUrl;
+            }
+        });
     </script>
 
     <!-- Adsterra Social Bar Ad -->

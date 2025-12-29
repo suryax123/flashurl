@@ -7,7 +7,7 @@ document.getElementById('urlForm').addEventListener('submit', async function(e) 
     const errorDiv = document.getElementById('error');
 
     resultDiv.classList.add('hidden');
-    errorDiv.classList. add('hidden');
+    errorDiv.classList.add('hidden');
 
     submitBtn.disabled = true;
     submitBtn.textContent = 'Shortening...';
@@ -15,13 +15,13 @@ document.getElementById('urlForm').addEventListener('submit', async function(e) 
     try {
         const response = await fetch('/shorten', {
             method: 'POST',
-            headers:  {
+            headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ originalUrl:  originalUrl })
+            body: JSON.stringify({ originalUrl: originalUrl })
         });
 
-        const data = await response. json();
+        const data = await response.json();
 
         if (response.ok) {
             document.getElementById('shortUrl').value = data.shortUrl;
@@ -29,13 +29,13 @@ document.getElementById('urlForm').addEventListener('submit', async function(e) 
             document.getElementById('originalUrl').value = '';
         } else {
             errorDiv.textContent = 'Error: ' + (data.error || 'Something went wrong');
-            errorDiv.classList. remove('hidden');
+            errorDiv.classList.remove('hidden');
         }
 
     } catch (error) {
         console.error('Error:', error);
         errorDiv.textContent = 'Network error. Please try again.';
-        errorDiv.classList. remove('hidden');
+        errorDiv.classList.remove('hidden');
     }
 
     submitBtn.disabled = false;

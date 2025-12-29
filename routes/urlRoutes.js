@@ -1,7 +1,28 @@
 const express = require('express');
 const router = express.Router();
 const { nanoid } = require('nanoid');
+const axios = require('axios');
 const Url = require('../models/url');
+
+// Helper function to verify reCAPTCHA
+async function verifyCaptcha(token) {
+    try {
+        const response = await axios.post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            null,
+            {
+                params: {
+                    secret: process.env.RECAPTCHA_SECRET_KEY,
+                    response: token
+                }
+            }
+        );
+        return response.data.success;
+    } catch (error) {
+        console.error('CAPTCHA verification error:', error);
+        return false;
+    }
+}
 
 // Create short URL - NO CAPTCHA HERE
 router.post('/shorten', async function(req, res) {
@@ -15,12 +36,25 @@ router.post('/shorten', async function(req, res) {
             return res.status(400).json({ error: 'Invalid URL' });
         }
 
-        // Generate short ID
-        const shortId = nanoid(6);
+        // Generate short ID with collision handling
+        let shortId;
+        let attempts = 0;
+        const maxAttempts = 5;
+        
+        while (attempts < maxAttempts) {
+            shortId = nanoid(6);
+            const existing = await Url.findOne({ shortId: shortId });
+            if (!existing) break;
+            attempts++;
+        }
+        
+        if (attempts >= maxAttempts) {
+            return res.status(500).json({ error: 'Failed to generate unique ID' });
+        }
 
         // Save to database
         const url = new Url({
-            originalUrl:  originalUrl,
+            originalUrl: originalUrl,
             shortId: shortId
         });
         await url.save();
@@ -100,6 +134,33 @@ router.get('/step3/:shortId', async function(req, res) {
     } catch (error) {
         console.error('Error:', error);
         res.status(500).render('404');
+    }
+});
+
+// Verify CAPTCHA and redirect - Server-side verification
+router.post('/verify/:shortId', async function(req, res) {
+    try {
+        const shortId = req.params.shortId;
+        const captchaToken = req.body.captchaToken;
+
+        // Verify CAPTCHA on server
+        const isValid = await verifyCaptcha(captchaToken);
+        
+        if (!isValid) {
+            return res.status(400).json({ error: 'CAPTCHA verification failed' });
+        }
+
+        const url = await Url.findOne({ shortId: shortId });
+
+        if (!url) {
+            return res.status(404).json({ error: 'Link not found' });
+        }
+
+        res.json({ success: true, redirectUrl: url.originalUrl });
+
+    } catch (error) {
+        console.error('Error:', error);
+        res.status(500).json({ error: 'Server error' });
     }
 });
 
