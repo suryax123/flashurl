@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { nanoid } = require('nanoid');
-const Url = require('../models/Url');
+const Url = require('../models/url');
 
 // Create short URL - NO CAPTCHA HERE
 router.post('/shorten', async function(req, res) {
