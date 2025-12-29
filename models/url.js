@@ -105,12 +105,6 @@ const urlSchema = new mongoose.Schema({
     }
 });
 
-// Update timestamp on save
-urlSchema.pre('save', function(next) {
-    this.updatedAt = new Date();
-    next();
-});
-
 // Indexes for performance (shortId already has unique: true)
 urlSchema.index({ user: 1 });
 urlSchema.index({ createdAt: -1 });
