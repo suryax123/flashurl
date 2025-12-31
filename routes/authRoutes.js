@@ -86,8 +86,10 @@ router.post('/register', isNotAuthenticated, async function(req, res) {
             await referrer.save();
         }
         
-        // Send verification email
-        await sendVerificationEmail(user, verificationToken);
+        // Send verification email asynchronously (don't fail registration if email sending fails)
+        sendVerificationEmail(user, verificationToken).catch(function(err) {
+            console.error('Verification email send failed:', err);
+        });
         
         res.redirect('/auth/login?success=registered');
         
@@ -126,15 +128,21 @@ router.post('/login', isNotAuthenticated, function(req, res, next) {
     })(req, res, next);
 });
 
-// Google OAuth
-router.get('/google', passport.authenticate('google', {
-    scope: ['profile', 'email']
-}));
+ // Google OAuth
+router.get('/google', function(req, res, next) {
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+        return res.redirect('/auth/login?error=google_not_configured');
+    }
+    passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
+});
 
 // Google OAuth callback
-router.get('/google/callback', passport.authenticate('google', {
-    failureRedirect: '/auth/login?error=google_failed'
-}), function(req, res) {
+router.get('/google/callback', function(req, res, next) {
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+        return res.redirect('/auth/login?error=google_not_configured');
+    }
+    passport.authenticate('google', { failureRedirect: '/auth/login?error=google_failed' })(req, res, next);
+}, function(req, res) {
     const returnTo = req.session.returnTo || '/dashboard';
     delete req.session.returnTo;
     res.redirect(returnTo);

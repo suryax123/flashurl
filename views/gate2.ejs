@@ -2,98 +2,98 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Step 2 of 3 - FlashURL</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Step 2 — FlashURL</title>
   <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
-  <div class="container">
-    <main>
-      <div class="card redirect-card" role="main" aria-labelledby="step2-title">
-        <div class="step-progress" aria-hidden="true">
-          <div class="step completed">✓</div>
-          <div class="step-line completed"></div>
-          <div class="step active">2</div>
-          <div class="step-line"></div>
-          <div class="step">3</div>
-        </div>
+  <main class="container">
+    <section class="card redirect-card" role="main" aria-labelledby="step2-title">
+      <div class="step-progress" aria-hidden="true">
+        <div class="step completed">✓</div>
+        <div class="step-line completed"></div>
+        <div class="step active">2</div>
+        <div class="step-line"></div>
+        <div class="step">3</div>
+      </div>
 
-        <h2 id="step2-title">🔎 Almost there...</h2>
-        <p class="step-text">Verifying your visit — please keep this page open for the best results.</p>
+      <h2 id="step2-title">Almost there…</h2>
+      <p class="step-text">Verifying your visit. Please keep this page open.</p>
 
-        <div class="ad-container">
-          <div class="ad-box banner-ad" role="region" aria-label="Advertisement">
-            <script>
-              atOptions = {
-                  'key' : '3eff8504b33c6f3f2949267088e6b4c3',
-                  'format' : 'iframe',
-                  'height' : 60,
-                  'width' : 468,
-                  'params' : {}
-              };
-            </script>
-            <script src="https://www.highperformanceformat.com/3eff8504b33c6f3f2949267088e6b4c3/invoke.js"></script>
-          </div>
-        </div>
-
-        <div class="countdown" aria-live="polite">
-          <p>Please wait <span id="timer" class="timer-count" aria-atomic="true">8</span> seconds</p>
-          <div class="progress-bar"><div class="progress" id="progress"></div></div>
-        </div>
-
-        <a href="/step3/<%= shortId %>" id="continueBtn" class="btn hidden" aria-hidden="true">Continue to Final Step →</a>
-
-        <div class="ad-container">
-          <div class="ad-box banner-ad" role="region" aria-label="Advertisement">
-            <script>
-              atOptions = {
-                  'key' : '3eff8504b33c6f3f2949267088e6b4c3',
-                  'format' : 'iframe',
-                  'height' : 60,
-                  'width' : 468,
-                  'params' : {}
-              };
-            </script>
-            <script src="https://www.highperformanceformat.com/3eff8504b33c6f3f2949267088e6b4c3/invoke.js"></script>
-          </div>
+      <!-- Banner top -->
+      <div class="ad-container banner-top">
+        <div class="ad-box banner-ad" role="region" aria-label="Advertisement - banner top">
+          <script>
+            atOptions = {
+              'key' : '3eff8504b33c6f3f2949267088e6b4c3',
+              'format' : 'iframe',
+              'height' : 60,
+              'width' : 320,
+              'params' : {}
+            };
+          </script>
+          <script src="https://www.highperformanceformat.com/3eff8504b33c6f3f2949267088e6b4c3/invoke.js"></script>
         </div>
       </div>
-    </main>
 
-    <footer>
-      <p>&copy; 2025 FlashURL. Made with ❤️</p>
-    </footer>
-  </div>
+      <div class="countdown" aria-live="polite">
+        <p>Please wait <span id="timer2" class="timer-count">8</span>s</p>
+        <div class="progress-bar"><div id="progress2" class="progress"></div></div>
+      </div>
 
-  <script src="/js/adblock-detect.js"></script>
+      <a id="continueBtn2" class="btn hidden" href="/step3/<%= shortId %>">Continue to Final Step</a>
+
+      <!-- Banner bottom -->
+      <div class="ad-container banner-bottom">
+        <div class="ad-box banner-ad" role="region" aria-label="Advertisement - banner bottom">
+          <script>
+            atOptions = {
+              'key' : '3eff8504b33c6f3f2949267088e6b4c3',
+              'format' : 'iframe',
+              'height' : 60,
+              'width' : 320,
+              'params' : {}
+            };
+          </script>
+          <script src="https://www.highperformanceformat.com/3eff8504b33c6f3f2949267088e6b4c3/invoke.js"></script>
+        </div>
+      </div>
+
+      <!-- Social bar -->
+      <div id="socialBarPlaceholder" aria-hidden="true"></div>
+
+      <div class="destination">
+        <p>Destination</p>
+        <code><%= originalUrl %></code>
+      </div>
+    </section>
+  </main>
+
+  <footer><p>© 2025 FlashURL</p></footer>
+
   <script>
-    (function() {
+    (function(){
       var timeLeft = 8;
-      var timerEl = document.getElementById('timer');
-      var progressEl = document.getElementById('progress');
-      var continueBtn = document.getElementById('continueBtn');
+      var timer = document.getElementById('timer2');
+      var progress = document.getElementById('progress2');
+      var btn = document.getElementById('continueBtn2');
 
-      function updateProgress() {
-        var elapsed = 8 - timeLeft;
-        progressEl.style.width = ((elapsed) / 8 * 100) + '%';
-      }
-
-      var countdown = setInterval(function() {
+      var interval = setInterval(function(){
         timeLeft--;
-        if (timerEl) timerEl.textContent = timeLeft;
-        updateProgress();
-
+        if (timer) timer.textContent = timeLeft;
+        if (progress) progress.style.width = ((8 - timeLeft)/8*100) + '%';
         if (timeLeft <= 0) {
-          clearInterval(countdown);
-          if (continueBtn) {
-            continueBtn.classList.remove('hidden');
-            continueBtn.setAttribute('aria-hidden', 'false');
+          clearInterval(interval);
+          if (btn) {
+            btn.classList.remove('hidden');
+            btn.setAttribute('aria-hidden','false');
           }
         }
       }, 1000);
     })();
   </script>
 
-  <script src="https://pl28355881.effectivegatecpm.com/41/b9/68/41b9683409b2e1df660f482f0a40d231.js"></script>
+  <script src="/js/adblock-detect.js"></script>
+  <script src="https://pl28355881.effectivegatecpm.com/41/b9/68/41b9683409b2e1df660f482f0a40d231.js" async></script>
 </body>
 </html>]]>

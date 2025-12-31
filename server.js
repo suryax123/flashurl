@@ -9,6 +9,7 @@ const { MongoStore } = require('connect-mongo');
 const path = require('path');
 
 const passport = require('./config/passport');
+const Url = require('./models/url');
 const urlRoutes = require('./routes/urlRoutes');
 const authRoutes = require('./routes/authRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
@@ -121,13 +122,40 @@ app.use('/auth', authLimiter, authRoutes);
 // Dashboard routes
 app.use('/dashboard', dashboardRoutes);
 
-// Public pages (before URL catch-all)
+ // Public pages (before URL catch-all)
 app.get('/publisher-rates', optionalAuth, function(req, res) {
     res.render('publisher-rates', { user: req.user });
 });
 
 app.get('/about', optionalAuth, function(req, res) {
     res.render('about', { user: req.user });
+});
+
+// Sitemap (dynamically generated from DB)
+app.get('/sitemap.xml', async function(req, res) {
+    try {
+        const base = process.env.BASE_URL || 'http://localhost:3000';
+        const urls = await Url.find({ isActive: true }).select('shortId updatedAt').lean().limit(50000);
+        const items = urls.map(u => {
+            const loc = `${base}/${u.shortId}`;
+            const lastmod = u.updatedAt ? new Date(u.updatedAt).toISOString() : new Date().toISOString();
+            return `<url><loc>${loc}</loc><lastmod>${lastmod}</lastmod></url>`;
+        }).join('');
+        const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${items}</urlset>`;
+        res.header('Content-Type', 'application/xml');
+        res.send(xml);
+    } catch (err) {
+        console.error('Sitemap error:', err);
+        res.status(500).send('Error generating sitemap');
+    }
+});
+
+// robots.txt
+app.get('/robots.txt', function(req, res) {
+    const base = process.env.BASE_URL || 'http://localhost:3000';
+    const content = `User-agent: *\nAllow: /\nSitemap: ${base}/sitemap.xml\n`;
+    res.header('Content-Type', 'text/plain');
+    res.send(content);
 });
 
 // URL routes (must be last due to /:shortId catch-all)
