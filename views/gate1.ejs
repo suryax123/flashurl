@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Step 1 — FlashURL</title>
   <link rel="stylesheet" href="/css/style.css" />
+  <script>
+    // Ensure provider sees atOptions before their invoke.js runs
+    window.atOptions = window.atOptions || {
+      key: '3eff8504b33c6f3f2949267088e6b4c3',
+      format: 'iframe',
+      height: 60,
+      width: 320,
+      params: {}
+    };
+  </script>
 </head>
 <body>
   <main class="container">
