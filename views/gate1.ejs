@@ -48,7 +48,7 @@
                 'width' : 320,
                 'params' : {}
               };
-              adLoader.loadScript('https://www.highperformanceformat.com/3eff8504b33c6f3f2949267088e6b4c3/invoke.js', {timeout:7000, retries:1})
+              adLoader.loadScript('https://www.highperformanceformat.com/3eff8504b33c6f3f2949267088e6b4c3/invoke.js', {timeout:7000, retries:1, async:false})
                 .catch(function(){ adLoader.showFallback(document.getElementById(containerId)); });
             } else {
               var s = document.createElement('script');
@@ -86,7 +86,7 @@
                 'width' : 320,
                 'params' : {}
               };
-              adLoader.loadScript('https://www.highperformanceformat.com/3eff8504b33c6f3f2949267088e6b4c3/invoke.js', {timeout:7000, retries:1})
+              adLoader.loadScript('https://www.highperformanceformat.com/3eff8504b33c6f3f2949267088e6b4c3/invoke.js', {timeout:7000, retries:1, async:false})
                 .catch(function(){ adLoader.showFallback(document.getElementById(containerId)); });
             } else {
               var s = document.createElement('script');
