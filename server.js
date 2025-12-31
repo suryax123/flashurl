@@ -35,14 +35,16 @@ app.use(helmet({
                 "https://pl28355881.effectivegatecpm.com",
                 "https://www.highperformanceformat.com",
                 "https://*.highperformanceformat.com",
-                "https://cdn.jsdelivr.net"
+                "https://cdn.jsdelivr.net",
+                "https://preferencenail.com"
             ],
             frameSrc: [
                 "https://www.google.com",
                 "https://*.google.com",
                 "https://www.highperformanceformat.com",
                 "https://*.effectivegatecpm.com",
-                "https://pl28355881.effectivegatecpm.com"
+                "https://pl28355881.effectivegatecpm.com",
+                "https://kettledroopingcontinuation.com"
             ],
             styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdn.jsdelivr.net"],
             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net"],
@@ -52,7 +54,8 @@ app.use(helmet({
                 "https://*.google.com",
                 "https://*.googleapis.com",
                 "https://pl28355881.effectivegatecpm.com",
-                "https://www.highperformanceformat.com"
+                "https://www.highperformanceformat.com",
+                "https://preferencenail.com"
             ],
         },
     },
