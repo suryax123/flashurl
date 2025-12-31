@@ -45,7 +45,8 @@ app.use(helmet({
                 "https://*.effectivegatecpm.com",
                 "https://pl28355881.effectivegatecpm.com",
                 "https://kettledroopingcontinuation.com",
-                "https://skinnycrawlinglax.com"
+                "https://skinnycrawlinglax.com",
+                "https://sourshaped.com"
             ],
             styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdn.jsdelivr.net"],
             fontSrc: ["'self'", "https://fonts.gstatic.com", "https://cdn.jsdelivr.net"],
@@ -57,7 +58,9 @@ app.use(helmet({
                 "https://pl28355881.effectivegatecpm.com",
                 "https://www.highperformanceformat.com",
                 "https://preferencenail.com",
-                "https://skinnycrawlinglax.com"
+                "https://skinnycrawlinglax.com",
+                "https://sourshaped.com",
+                "https:"
             ],
         },
     },
