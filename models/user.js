@@ -154,13 +154,12 @@ userSchema.pre('save', async function() {
     this.password = await bcrypt.hash(this.password, salt);
 });
 
-// Generate referral code before saving
-userSchema.pre('save', function(next) {
+ // Generate referral code before saving
+userSchema.pre('save', function() {
     if (!this.referralCode) {
         this.referralCode = this._id.toString().slice(-6).toUpperCase() + 
                            Math.random().toString(36).substring(2, 5).toUpperCase();
     }
-    next();
 });
 
 // Compare password method
