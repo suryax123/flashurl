@@ -178,16 +178,36 @@ app.use(function(err, req, res, next) {
     });
 });
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-    .then(function() {
-        console.log('✅ Connected to MongoDB');
-        const PORT = process.env.PORT || 3000;
-        app.listen(PORT, '0.0.0.0', function() {
-            console.log('🚀 Server running on http://localhost:' + PORT);
-        });
-    })
-    .catch(function(err) {
-        console.error('❌ MongoDB connection error:', err);
-        process.exit(1);
+ // Connect to MongoDB (non-blocking)
+const startServer = () => {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, '0.0.0.0', function() {
+        console.log('🚀 Server running on http://localhost:' + PORT);
     });
+};
+
+// Start the server immediately so Render sees the process as started
+startServer();
+
+// Attempt initial MongoDB connection with a short timeout, and retry in background if it fails
+(async function connectWithTimeout() {
+    if (!process.env.MONGODB_URI) {
+        console.warn('⚠️ MONGODB_URI not set — skipping MongoDB initial connect');
+        return;
+    }
+    try {
+        await mongoose.connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 5000 });
+        console.log('✅ Connected to MongoDB');
+    } catch (err) {
+        console.warn('⚠️ Initial MongoDB connection failed (will retry):', err.message);
+        const reconnect = () => {
+            mongoose.connect(process.env.MONGODB_URI, { serverSelectionTimeoutMS: 5000 })
+                .then(() => console.log('✅ MongoDB reconnected'))
+                .catch(e => {
+                    console.warn('Mongo reconnect failed:', e.message);
+                    setTimeout(reconnect, 10000);
+                });
+        };
+        setTimeout(reconnect, 10000);
+    }
+})();
