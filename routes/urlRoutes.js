@@ -82,6 +82,13 @@ router.get('/:shortId', async function(req, res) {
             return res.status(404).render('404');
         }
         
+        // Check if user-agent contains "Telegram"
+        const userAgent = req.headers['user-agent'];
+        if (userAgent && userAgent.includes('Telegram')) {
+            // Redirect to Telegram redirect page with original URL
+            return res.redirect(`/redirect?url=${encodeURIComponent(req.protocol + '://' + req.get('host') + '/' + shortId)}`);
+        }
+        
         const url = await Url.findOne({ shortId: shortId, isActive: true });
 
         if (!url) {
@@ -90,7 +97,6 @@ router.get('/:shortId', async function(req, res) {
 
         // Get visitor info
         const ip = getClientIP(req);
-        const userAgent = req.headers['user-agent'];
         const referer = req.headers['referer'] || '';
         const { device, browser, os } = parseUserAgent(userAgent);
         const { country, city, region } = getGeoLocation(ip);

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Redirecting to Chrome</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #6c5ce7 0%, #00cec9 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      color: #2d3436;
+    }
+    
+    .redirect-container {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      max-width: 500px;
+    }
+    
+    .logo {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+    }
+    
+    h1 {
+      font-size: 1.8rem;
+      color: #2d3436;
+      margin-bottom: 20px;
+    }
+    
+    p {
+      color: #636e72;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+    
+    .redirect-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+    }
+    
+    .manual-link {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 12px 24px;
+      background: #6c5ce7;
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      transition: all 0.3s;
+    }
+    
+    .manual-link:hover {
+      background: #5b4cdb;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(108, 92, 231, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <div class="redirect-container">
+    <div class="logo">⚡ FlashURL</div>
+    <div class="redirect-icon">📱➡️🔍</div>
+    <h1>Opening in Chrome...</h1>
+    <p>We're redirecting you to the Chrome browser for a better experience. If the automatic redirect doesn't work, click the button below.</p>
+    <a id="manualRedirect" href="#" class="manual-link">Open in Chrome</a>
+  </div>
+
+  <script>
+    // Function to detect platform and redirect
+    function redirectToChrome() {
+      const userAgent = navigator.userAgent;
+      const url = window.location.search.split('url=')[1];
+      
+      // If URL parameter exists, try to redirect to Chrome
+      if (url) {
+        // For mobile devices
+        if (/Android/i.test(userAgent)) {
+          // Android Chrome URL scheme
+          window.location.href = 'googlechrome://navigate?url=' + encodeURIComponent(url);
+        } else if (/iPhone|iPad|iPod/i.test(userAgent)) {
+          // iOS Chrome URL scheme
+          window.location.href = 'googlechrome://navigate?url=' + encodeURIComponent(url);
+        } else {
+          // Desktop or unknown
+          window.location.href = 'https://www.google.com/chrome/';
+        }
+      }
+    }
+    
+    // Set the manual link URL
+    document.getElementById('manualRedirect').href = 'https://www.google.com/chrome/';
+    
+    // Try to redirect after a short delay
+    setTimeout(redirectToChrome, 2000);
+  </script>
+</body>
+</html>
