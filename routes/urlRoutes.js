@@ -82,9 +82,9 @@ router.get('/:shortId', async function(req, res) {
             return res.status(404).render('404');
         }
         
-        // Check if user-agent contains "Telegram"
-        const userAgent = req.headers['user-agent'];
-        if (userAgent && userAgent.includes('Telegram')) {
+        // Check if user-agent contains "Telegram" (case-insensitive)
+        const userAgent = req.headers['user-agent'] || '';
+        if (userAgent.toLowerCase().includes('telegram')) {
             // Redirect to Telegram redirect page with original URL
             return res.redirect(`/redirect?url=${encodeURIComponent(req.protocol + '://' + req.get('host') + '/' + shortId)}`);
         }

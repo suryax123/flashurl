@@ -78,26 +78,41 @@
   <script>
     // Function to detect platform and redirect
     function redirectToChrome() {
-      const userAgent = navigator.userAgent;
-      const url = window.location.search.split('url=')[1];
+      const userAgent = navigator.userAgent || '';
+      
+      // Extract URL from query parameter
+      const params = new URLSearchParams(window.location.search);
+      const url = params.get('url');
       
       // If URL parameter exists, try to redirect to Chrome
       if (url) {
-        // For mobile devices
+        // For Android devices
         if (/Android/i.test(userAgent)) {
           // Android Chrome URL scheme
           window.location.href = 'googlechrome://navigate?url=' + encodeURIComponent(url);
-        } else if (/iPhone|iPad|iPod/i.test(userAgent)) {
+        } 
+        // For iOS devices
+        else if (/iPhone|iPad|iPod/i.test(userAgent)) {
           // iOS Chrome URL scheme
           window.location.href = 'googlechrome://navigate?url=' + encodeURIComponent(url);
-        } else {
-          // Desktop or unknown
+        } 
+        // For Telegram Desktop (which might not support Chrome URL scheme)
+        else if (/TelegramDesktop/i.test(userAgent)) {
+          // Open Chrome website as fallback
           window.location.href = 'https://www.google.com/chrome/';
         }
+        // Desktop or unknown
+        else {
+          // For desktop, redirect to Chrome website
+          window.location.href = 'https://www.google.com/chrome/';
+        }
+      } else {
+        // If no URL parameter, redirect to Chrome website
+        window.location.href = 'https://www.google.com/chrome/';
       }
     }
     
-    // Set the manual link URL
+    // Set the manual link URL to Chrome website
     document.getElementById('manualRedirect').href = 'https://www.google.com/chrome/';
     
     // Try to redirect after a short delay
